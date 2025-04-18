@@ -6,16 +6,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class AuthController extends Controller
 {
     public function login(Request $r)
     {
+        Inertia::encryptHistory();
         $credentials = $r->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             $r->session()->regenerate();
-            return response()->json(['message' => 'Login successful']);
+
+            return redirect()->intended('/')->with('success', 'Login successful');
+
         }
 
         return response()->json(['message' => 'The provided credentials do not match our records.'], 401);
@@ -41,6 +45,27 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Registration successful']);
     }
+
+    
+    public function logout(Request $r)
+    {
+
+
+    
+        // Invalidate the session
+        $r->session()->invalidate();
+    
+        // Regenerate the CSRF token
+        $r->session()->regenerateToken();
+        
+
+        // Log out the user
+        Auth::logout();
+        Inertia::clearHistory();
+        redirect('/');
+
+    }
+    
 }
 
 

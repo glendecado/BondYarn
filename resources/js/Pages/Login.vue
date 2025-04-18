@@ -3,18 +3,36 @@ import { useForm, Link } from '@inertiajs/vue3';
 
 
 const form = useForm({
-    email: '',
-    password: '',
+    email: null,
+    password: null,
     remember: false,
-    
+
 });
 
 const submit = () => {
     form.post('/login', {
-        onFinish: () => form.reset('password'),
+        onStart: () => {
+           
+        },
+        onFinish: () => {
+            form.reset('password')
+
+        }
     });
 };
+
+
 </script>
+
+<script>
+export default {
+    mounted() {
+        if (this.$page.props.auth) {
+            // If user is authenticated, redirect to the dashboard
+            Inertia.visit('/dashboard', { replace: true });
+        }
+    }
+};</script>
 
 <template>
     <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
@@ -113,10 +131,9 @@ const submit = () => {
             <div class="text-center text-sm text-gray-600">
                 New to BondYarn?
                 <Link href="/register" class="font-medium text-purple-500 hover:text-purple-600">
-                    Create an account
+                Create an account
                 </Link>
             </div>
         </div>
     </div>
 </template>
-
