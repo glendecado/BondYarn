@@ -12,29 +12,23 @@ const form = useForm({
 const submit = () => {
     form.post('/login', {
         onStart: () => {
-           
+            window.history.replaceState({}, document.title, window.location.href);
         },
         onFinish: () => {
             form.reset('password')
 
         }
     });
+
+
 };
 
 
 </script>
 
-<script>
-export default {
-    mounted() {
-        if (this.$page.props.auth) {
-            // If user is authenticated, redirect to the dashboard
-            Inertia.visit('/dashboard', { replace: true });
-        }
-    }
-};</script>
 
 <template>
+
     <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
         <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-xl">
             <!-- App Title with Yarn-inspired Logo -->
